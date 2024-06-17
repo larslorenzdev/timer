@@ -49,6 +49,7 @@ onMounted(async () => {
         const newInterval = intervals.shift() as Interval
 
         currentSeconds.value = newInterval.seconds
+        currentTitle.value = newInterval.title
       }
       else {
         clearInterval(interval)
