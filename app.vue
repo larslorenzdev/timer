@@ -1,60 +1,55 @@
 <template>
   <div>
-    <h1>{{currentTitle}}</h1>
-    <strong>00:{{ currentSeconds }}</strong>
+    <h1>{{ interval?.title }}</h1>
+    <strong>{{ formatTime(current) }}</strong>
+    <BaseInput
+      v-model="routeQuerySeconds"
+      :disabled="isRunning"
+    />
+    <BaseInput
+      v-model="routeQueryPause"
+      :disabled="isRunning"
+    />
+    <BaseInput
+      v-model="routeQueryInterval"
+      :disabled="isRunning"
+    />
+    <BaseButton
+      label="Start"
+      :disabled="isRunning"
+      @click="onStartTimer"
+    />
+    <BaseButton
+      label="Stop"
+      @click="onStopTimer"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-type Interval = {
-  title: string
-  seconds: number
+import useIntervalTimer from '~/composables/useIntervalTimer'
+import { formatTime } from '~/utils/timeFormatter'
+
+const routeQuerySeconds = useRouteQueryNumberRef('seconds', 30)
+const routeQueryInterval = useRouteQueryNumberRef('interval', 1)
+const routeQueryPause = useRouteQueryNumberRef('pause', 30)
+const { startTimer, stopTimer, interval, current, isRunning } = useIntervalTimer()
+
+function onStartTimer() {
+  startTimer({
+    seconds: routeQuerySeconds.value,
+    pause: routeQueryPause.value,
+    interval: routeQueryInterval.value,
+  })
 }
 
-const route = useRoute()
-const seconds = Number.parseInt(route.query.seconds as string ?? '0')
-const interval = Number.parseInt(route.query.interval as string ?? '0')
-const pause = Number.parseInt(route.query.pause as string ?? '0')
-const currentSeconds = shallowRef(seconds)
-const currentTitle = shallowRef('Work')
-const intervals: Interval[] = []
-
-for (let i = 0; i < interval; i += 1) {
-  intervals.push({ title: 'Work', seconds })
-  intervals.push({ title: 'Pause', seconds: pause })
+function onStopTimer() {
+  stopTimer()
 }
-
-intervals.shift()
 
 onMounted(async () => {
   if ('wakeLock' in navigator) {
     await navigator.wakeLock.request('screen')
   }
-
-  const interval = setInterval(() => {
-    currentSeconds.value--
-
-    if (currentSeconds.value === 0) {
-      const context = new AudioContext()
-      const oscillator = context.createOscillator()
-      oscillator.type = 'sine'
-      oscillator.frequency.value = 800
-      oscillator.connect(context.destination)
-      oscillator.start();
-      setTimeout(function () {
-        oscillator.stop()
-      }, 100)
-
-      if (intervals.length > 0) {
-        const newInterval = intervals.shift() as Interval
-
-        currentSeconds.value = newInterval.seconds
-        currentTitle.value = newInterval.title
-      }
-      else {
-        clearInterval(interval)
-      }
-    }
-  }, 1_000)
 })
 </script>
