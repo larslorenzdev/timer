@@ -2,6 +2,7 @@
   <div>
     <h1>{{ interval?.title }}</h1>
     <strong>{{ formatTime(current) }}</strong>
+    <code>{{ error?.message }}</code>
     <BaseInput
       v-model="routeQuerySeconds"
       :disabled="isRunning"
@@ -33,7 +34,7 @@ import { formatTime } from '~/utils/timeFormatter'
 const routeQuerySeconds = useRouteQueryNumberRef('seconds', 30)
 const routeQueryInterval = useRouteQueryNumberRef('interval', 1)
 const routeQueryPause = useRouteQueryNumberRef('pause', 30)
-const { startTimer, stopTimer, interval, current, isRunning } = useIntervalTimer()
+const { startTimer, stopTimer, interval, current, isRunning, error } = useIntervalTimer()
 
 function onStartTimer() {
   startTimer({

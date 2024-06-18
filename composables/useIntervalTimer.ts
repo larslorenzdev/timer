@@ -17,6 +17,7 @@ export default function () {
   const interval = shallowRef<Interval>()
   const timeout = shallowRef()
   const isRunning = computed(() => !!timeout.value)
+  const error = shallowRef<Error>()
 
   function startTimer(options: StartOptions) {
     const intervals = generateIntervals(options)
@@ -28,7 +29,12 @@ export default function () {
       current.value--
 
       if (current.value <= 0) {
-        playSound(200)
+        try {
+          playSound(200)
+        }
+        catch (e) {
+          console.error(e)
+        }
 
         if (intervals.length > 0) {
           interval.value = intervals.shift() as Interval
@@ -67,5 +73,6 @@ export default function () {
     interval,
     current,
     isRunning,
+    error,
   }
 }
