@@ -1,21 +1,15 @@
-FROM node as base
+FROM node:20 as build
 
-ARG PORT=3000
-
-WORKDIR /src
-
-# Build
-FROM base as build
+WORKDIR /app
 
 COPY . .
 RUN yarn install
 RUN yarn generate
 
-# Run
-FROM base
+FROM caddy:2
 
-ENV PORT=$PORT
+COPY --from=build /app/.output/public /usr/share/caddy
 
-COPY --from=build /src/.output /src/.output
+EXPOSE 80
 
-CMD [ "node", ".output/server/index.mjs" ]
+CMD [ "caddy", "run", "--config", "/etc/caddy/Caddyfile" ]
