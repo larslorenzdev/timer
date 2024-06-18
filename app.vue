@@ -77,8 +77,8 @@ onMounted(async () => {
     await navigator.wakeLock.request('screen')
   }
 
-  await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-
   audio.value?.play()
 })
+
+navigator.mediaDevices.getUserMedia({ audio: true, video: false })
 </script>
