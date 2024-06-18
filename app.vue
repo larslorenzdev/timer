@@ -59,9 +59,26 @@ function onStopTimer() {
   stopTimer()
 }
 
+function iOS() {
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod',
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  || (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+}
+
 onMounted(async () => {
   if ('wakeLock' in navigator) {
     await navigator.wakeLock.request('screen')
+  }
+
+  if (iOS()) {
+    await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
   }
 
   audio.value?.play()
