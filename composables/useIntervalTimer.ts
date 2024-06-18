@@ -54,7 +54,9 @@ export default function () {
   }
 
   function generateIntervals(options: StartOptions) {
-    const intervals: Interval[] = []
+    const intervals: Interval[] = [
+      { title: 'Prepare', seconds: 5 },
+    ]
 
     for (let i = 0; i < options.interval; i += 1) {
       intervals.push({ title: 'Work', seconds: options.seconds })

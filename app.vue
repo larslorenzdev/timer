@@ -24,6 +24,16 @@
       label="Stop"
       @click="onStopTimer"
     />
+
+    <audio
+      ref="audio"
+      hidden
+    >
+      <source
+        src="~/assets/beep.mp3"
+        type="audio/mpeg"
+      >
+    </audio>
   </div>
 </template>
 
@@ -35,6 +45,7 @@ const routeQuerySeconds = useRouteQueryNumberRef('seconds', 30)
 const routeQueryInterval = useRouteQueryNumberRef('interval', 1)
 const routeQueryPause = useRouteQueryNumberRef('pause', 30)
 const { startTimer, stopTimer, interval, current, isRunning, error } = useIntervalTimer()
+const audio = shallowRef()
 
 function onStartTimer() {
   startTimer({
@@ -52,5 +63,7 @@ onMounted(async () => {
   if ('wakeLock' in navigator) {
     await navigator.wakeLock.request('screen')
   }
+
+  audio.value?.play()
 })
 </script>
