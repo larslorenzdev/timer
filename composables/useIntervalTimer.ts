@@ -16,7 +16,7 @@ export default function () {
   const current = shallowRef(0)
   const interval = shallowRef<Interval>()
   const timeout = shallowRef()
-  const isRunning = computed(() => !!interval.value)
+  const isRunning = computed(() => !!timeout.value)
 
   function startTimer(options: StartOptions) {
     const intervals = generateIntervals(options)
