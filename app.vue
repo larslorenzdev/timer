@@ -1,9 +1,8 @@
 <template>
   <div>
     <h1>{{ interval?.title }}</h1>
-    <strong>{{ formatTime(current) }}</strong>
+    <strong>{{ formatTime(current ?? 0) }}</strong>
     <code>{{ error?.message }}</code>
-    {{ iOS() }}
     <BaseInput
       v-model="routeQuerySeconds"
       :disabled="isRunning"
@@ -25,28 +24,23 @@
       label="Stop"
       @click="onStopTimer"
     />
-
-    <audio
-      ref="audio"
-      hidden
-    >
-      <source
-        src="~/assets/beep.mp3"
-        type="audio/mpeg"
-      >
-    </audio>
+    <BaseButton
+      label="Pause"
+      @click="onPauseTimer"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import useIntervalTimer from '~/composables/useIntervalTimer'
 import { formatTime } from '~/utils/timeFormatter'
+import useKeepAwake from '~/composables/useKeepAwake'
 
 const routeQuerySeconds = useRouteQueryNumberRef('seconds', 30)
 const routeQueryInterval = useRouteQueryNumberRef('interval', 1)
 const routeQueryPause = useRouteQueryNumberRef('pause', 30)
-const { startTimer, stopTimer, interval, current, isRunning, error } = useIntervalTimer()
-const audio = shallowRef()
+const { tryLocking } = useKeepAwake()
+const { startTimer, stopTimer, pauseTimer, interval, current, isRunning, error } = useIntervalTimer()
 
 function onStartTimer() {
   startTimer({
@@ -60,24 +54,11 @@ function onStopTimer() {
   stopTimer()
 }
 
-function iOS() {
-  return [
-    'iPad Simulator',
-    'iPhone Simulator',
-    'iPod Simulator',
-    'iPad',
-    'iPhone',
-    'iPod',
-  ].includes(navigator.platform)
-  // iPad on iOS 13 detection
-  || (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+function onPauseTimer() {
+  pauseTimer()
 }
 
-onMounted(async () => {
-  if ('wakeLock' in navigator) {
-    await navigator.wakeLock.request('screen')
-  }
-
-  audio.value?.play()
+onMounted(() => {
+  return tryLocking()
 })
 </script>

@@ -13,44 +13,59 @@ export type StartOptions = {
 
 export default function () {
   const { playSound } = useSoundGenerator()
-  const current = shallowRef(0)
+  const current = shallowRef<number>()
   const interval = shallowRef<Interval>()
+  const intervals = shallowRef<Interval[]>()
   const timeout = shallowRef()
   const isRunning = computed(() => !!timeout.value)
   const error = shallowRef<Error>()
 
   function startTimer(options: StartOptions) {
-    const intervals = generateIntervals(options)
-
-    interval.value = intervals.shift() as Interval
-    current.value = interval.value.seconds
+    if (!interval.value) {
+      intervals.value = generateIntervals(options)
+      interval.value = intervals.value.shift() as Interval
+      current.value = interval.value.seconds
+    }
 
     timeout.value = setInterval(() => {
-      current.value--
+      if (current.value && intervals.value) {
+        current.value--
 
-      if (current.value <= 0) {
-        try {
-          playSound(200)
-        }
-        catch (e) {
-          console.error(e)
-        }
+        if (current.value <= 0) {
+          try {
+            playSound(200)
+          }
+          catch (e) {
+            console.error(e)
+          }
 
-        if (intervals.length > 0) {
-          interval.value = intervals.shift() as Interval
+          if (intervals.value.length > 0) {
+            interval.value = intervals.value.shift() as Interval
 
-          current.value = interval.value.seconds
-        }
-        else {
-          stopTimer()
+            current.value = interval.value.seconds
+          }
+          else {
+            stopTimer()
+          }
         }
       }
+      else {
+        stopTimer()
+      }
     }, 1_000)
+  }
+
+  function pauseTimer() {
+    clearInterval(timeout.value)
+    timeout.value = undefined
   }
 
   function stopTimer() {
     clearInterval(timeout.value)
     timeout.value = undefined
+    interval.value = undefined
+    intervals.value = undefined
+    current.value = undefined
   }
 
   function generateIntervals(options: StartOptions) {
@@ -76,5 +91,6 @@ export default function () {
     current,
     isRunning,
     error,
+    pauseTimer,
   }
 }
