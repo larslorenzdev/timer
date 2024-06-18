@@ -1,6 +1,8 @@
 export default function () {
   const context = new AudioContext()
 
+  navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+
   function playSound(ms: number) {
     const oscillator = context.createOscillator()
     oscillator.type = 'sine'

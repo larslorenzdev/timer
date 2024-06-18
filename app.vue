@@ -3,6 +3,7 @@
     <h1>{{ interval?.title }}</h1>
     <strong>{{ formatTime(current) }}</strong>
     <code>{{ error?.message }}</code>
+    {{ iOS() }}
     <BaseInput
       v-model="routeQuerySeconds"
       :disabled="isRunning"
@@ -79,6 +80,4 @@ onMounted(async () => {
 
   audio.value?.play()
 })
-
-navigator.mediaDevices.getUserMedia({ audio: true, video: false })
 </script>
