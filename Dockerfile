@@ -3,6 +3,7 @@ FROM node:20 as build
 WORKDIR /app
 
 COPY . .
+RUN corepack enable
 RUN yarn install
 RUN yarn generate
 
