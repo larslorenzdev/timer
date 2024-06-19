@@ -31,9 +31,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install Netlify
-        run: yarn global add netlify-cli@17.10.1
-
       - name: Install Dependencies
         run: yarn install
 
@@ -41,7 +38,6 @@ jobs:
         run: yarn generate
 
       - name: Deploy to Netlify
-        id: netlify_deploy
         run: |
           netlify deploy \
             --dir .output/public \
