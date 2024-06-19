@@ -28,21 +28,22 @@
       label="Pause"
       @click="onPauseTimer"
     />
+    {{ locked }}
   </div>
 </template>
 
 <script lang="ts" setup>
 import useIntervalTimer from '~/composables/useIntervalTimer'
-import { formatTime } from '~/utils/timeFormatter'
 import useKeepAwake from '~/composables/useKeepAwake'
 
 const routeQuerySeconds = useRouteQueryNumberRef('seconds', 30)
 const routeQueryInterval = useRouteQueryNumberRef('interval', 1)
 const routeQueryPause = useRouteQueryNumberRef('pause', 30)
-const { tryLocking } = useKeepAwake()
+const { locked, enableLock, disableLock } = useKeepAwake()
 const { startTimer, stopTimer, pauseTimer, interval, current, isRunning, error } = useIntervalTimer()
 
 function onStartTimer() {
+  enableLock()
   startTimer({
     seconds: routeQuerySeconds.value,
     pause: routeQueryPause.value,
@@ -51,14 +52,12 @@ function onStartTimer() {
 }
 
 function onStopTimer() {
+  disableLock()
   stopTimer()
 }
 
 function onPauseTimer() {
+  disableLock()
   pauseTimer()
 }
-
-onMounted(() => {
-  return tryLocking()
-})
 </script>

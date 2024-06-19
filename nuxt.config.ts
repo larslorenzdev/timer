@@ -3,6 +3,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   modules: ['@nuxt/eslint'],
+  devServer: {
+    host: '0.0.0.0',
+  },
   eslint: {
     config: {
       stylistic: {

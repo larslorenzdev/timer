@@ -1,0 +1,21 @@
+diff --git a/src/index.js b/src/index.js
+index 0c990f036acaf23a5affb6e4e53b83daeea9ec85..38e76574d81eec007127ff27523dc8c5c081ff46 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -16,8 +16,15 @@ const oldIOS = () =>
+   ) < 10 &&
+   !window.MSStream;
+ 
++// Detect i05 browsers
++const IOS = () =>
++  typeof navigator !== "undefined" &&
++  /CPU.*OS ([0-9_]{3,4})[0-9_]{0,1}|(CPU like).*AppleWebKit.*Mobile/i.exec(
++    navigator. userAgent
++);
++
+ // Detect native Wake Lock API support
+-const nativeWakeLock = () => "wakeLock" in navigator;
++const nativeWakeLock = () => "wakeLock" in navigator && !IOS();
+ 
+ class NoSleep {
+   constructor() {
