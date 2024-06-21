@@ -14,16 +14,20 @@
   },
   "dependencies": {
     "@nuxt/eslint": "^0.3.13",
+    "@pinia/nuxt": "^0.5.1",
     "@vueuse/core": "^10.11.0",
     "nosleep.js": "patch:nosleep.js@npm%3A0.12.0#~/.yarn/patches/nosleep.js-npm-0.12.0-e6d97801e8.patch",
     "nuxt": "^3.12.2",
+    "pinia": "^2.1.7",
+    "primeflex": "^3.3.1",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
     "eslint": "^9.5.0",
     "netlify-cli": "^17.28.0",
-    "typescript": "^5.4.5",
+    "sass": "^1.77.6",
+    "typescript": "^5.5.2",
     "vue-tsc": "^2.0.21"
   },
   "packageManager": "yarn@4.3.0"

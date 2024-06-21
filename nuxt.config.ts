@@ -2,10 +2,8 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
-  modules: ['@nuxt/eslint'],
-  devServer: {
-    host: '0.0.0.0',
-  },
+  modules: ['@nuxt/eslint', '@pinia/nuxt'],
+  css: ['~/assets/main.scss', 'primeflex/primeflex.css'],
   eslint: {
     config: {
       stylistic: {

@@ -1,8 +1,7 @@
 import NoSleep from 'nosleep.js'
 import { useEventListener } from '@vueuse/core'
 
-// TODO: Should be a store
-export default function () {
+export default defineStore('KeepAwake', () => {
   const locked = shallowRef(false)
   const wakeLock = shallowRef<WakeLockSentinel>()
   const wakeLockActive = shallowRef(false)
@@ -53,4 +52,4 @@ export default function () {
     disableLock,
     locked,
   }
-}
+})
